@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:to_do_list/BLoC/bloc_provider.dart';
+import 'package:to_do_list/BLoC/task_bloc.dart';
+import 'package:to_do_list/components/task_list.dart';
 
-import 'list_tile.dart';
 import 'title_widget.dart';
 
 class CompletedTasksContainer extends StatefulWidget {
@@ -13,6 +15,7 @@ class _CompletedTasksContainerState extends State<CompletedTasksContainer> {
   bool _isDropOpen = false;
   @override
   Widget build(BuildContext context) {
+    final TaskBloc bloc = BlocProvider.of<TaskBloc>(context);
     return Column(
       children: <Widget>[
         Padding(
@@ -44,10 +47,23 @@ class _CompletedTasksContainerState extends State<CompletedTasksContainer> {
           duration: Duration(milliseconds: 500),
           child: Column(
             children: <Widget>[
-              TaskTile(
-                isChecked: true,
-              ),
-              Text('2'),
+              StreamBuilder(
+                stream: bloc.stream,
+                builder: (context, snapshot) {
+                  final results = snapshot.data;
+                  if (results == null) {
+                    return Center(
+                      child: Text('List is empty!'),
+                    );
+                  }
+                  if (results.isEmpty) {
+                    return Center(
+                      child: Text('No Results'),
+                    );
+                  }
+                  return TasksWidget(items: results);
+                },
+              )
             ],
           ),
         ),

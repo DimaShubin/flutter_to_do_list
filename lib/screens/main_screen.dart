@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:to_do_list/BLoC/bloc_provider.dart';
 import 'package:to_do_list/BLoC/task_bloc.dart';
 import 'package:to_do_list/components/list_completed.dart';
-import 'package:to_do_list/components/list_tile.dart';
+import 'package:to_do_list/components/task_list.dart';
 import 'package:to_do_list/components/title_widget.dart';
 import 'package:to_do_list/screens/add_tast_screen.dart';
 
@@ -31,26 +31,25 @@ class MainScreen extends StatelessWidget {
           Container(
             child: StreamBuilder(
               stream: bloc.stream,
+              initialData: bloc.tasks,
               builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.none:
-                    return Text('Select lot');
-                  case ConnectionState.waiting:
-                    return Text('Awaiting bids...');
-                  case ConnectionState.active:
-                    print(snapshot.data);
-                    return Text('\$${snapshot.data}');
-                  case ConnectionState.done:
-                    return Text('\$${snapshot.data} (closed)');
+                final results = snapshot.data;
+                if (results == null) {
+                  return Center(
+                    child: Text('List is empty!'),
+                  );
                 }
-                return null;
+                if (results.isEmpty) {
+                  return Center(
+                    child: Text('No Results'),
+                  );
+                }
+                return TasksWidget(items: results);
               },
             ),
           ),
-          TasksWidget(items: items),
+//          TasksWidget(items: items),
           CompletedTasksContainer(),
-
-//          buildCompletedList(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -62,34 +61,5 @@ class MainScreen extends StatelessWidget {
         backgroundColor: Colors.black87,
       ),
     );
-  }
-}
-
-class TasksWidget extends StatelessWidget {
-  const TasksWidget({
-    Key key,
-    @required this.items,
-  }) : super(key: key);
-
-  final List<String> items;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.separated(
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          final key = items[index];
-          return TaskTile(
-            taskTitle: 'task 1',
-            isChecked: false,
-            checkboxCallback: () {},
-            key: Key(key),
-          );
-        },
-        separatorBuilder: (context, index) => Divider(
-              color: Colors.white,
-              height: 2.0,
-            ),
-        itemCount: items.length);
   }
 }

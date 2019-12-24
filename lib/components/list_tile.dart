@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:to_do_list/BLoC/bloc_provider.dart';
+import 'package:to_do_list/BLoC/task_bloc.dart';
 
 import '../constants.dart';
 
 class TaskTile extends StatelessWidget {
-  final bool isChecked;
+  bool isChecked;
   final String taskTitle;
   final Function checkboxCallback;
   final Key key;
@@ -12,9 +16,10 @@ class TaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TaskBloc bloc = BlocProvider.of<TaskBloc>(context);
     return Dismissible(
       onDismissed: (DismissDirection direction) {
-        print('onDismissed');
+        bloc.removeTask(this.taskTitle);
         Scaffold.of(context).showSnackBar(SnackBar(
           content: Text("$key dismissed"),
           behavior: SnackBarBehavior.floating,
@@ -39,7 +44,18 @@ class TaskTile extends StatelessWidget {
           title: Text('$taskTitle'),
           trailing: Checkbox(
             value: isChecked,
-            onChanged: (val) {},
+            onChanged: (val) {
+              bloc.updateTask(this.taskTitle);
+
+              if (this.isChecked == false) {
+                Timer(
+                    Duration(milliseconds: 400),
+                    () => Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text("Task completed!"),
+                          behavior: SnackBarBehavior.floating,
+                        )));
+              }
+            },
           ),
         ),
       ),

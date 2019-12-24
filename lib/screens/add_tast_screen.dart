@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:to_do_list/BLoC/bloc_provider.dart';
 import 'package:to_do_list/BLoC/task_bloc.dart';
 
 import '../constants.dart';
@@ -12,7 +13,6 @@ class AddTask extends StatefulWidget {
 class _AddTaskState extends State<AddTask> {
   final titleController = TextEditingController();
   final descrController = TextEditingController();
-  final bloc = TaskBloc();
 
   @override
   void dispose() {
@@ -20,11 +20,12 @@ class _AddTaskState extends State<AddTask> {
     titleController.dispose();
     descrController.dispose();
     super.dispose();
-    bloc.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final TaskBloc bloc = BlocProvider.of<TaskBloc>(context);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
