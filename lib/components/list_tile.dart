@@ -21,7 +21,6 @@ class TaskTile extends StatelessWidget {
         ));
       },
       direction: DismissDirection.endToStart,
-      //todo: add dynamic key https://flutter.dev/docs/cookbook/gestures/dismissible
       background: Container(
         color: kColorDarkGray,
         padding: EdgeInsets.symmetric(horizontal: 15),

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:to_do_list/screens/main_screen.dart';
 import 'package:to_do_list/screens/splash_screen.dart';
 
+import 'BLoC/bloc_provider.dart';
+import 'BLoC/task_bloc.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -12,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MainScreen(),
+      home: BlocProvider<TaskBloc>(bloc: TaskBloc(), child: MainScreen()),
     );
   }
 }
